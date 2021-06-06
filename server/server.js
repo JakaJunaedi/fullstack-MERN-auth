@@ -1,8 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const dbConfig = require("./app/config/db.config");
+
 const morgan = require("morgan");
+require('dotenv').config();
 
 const conversationRoute = require('./app/routes/conversation');
 const messageRoute = require('./app/routes/message');
@@ -39,7 +40,7 @@ const db = require("./app/models");
 const Role = db.role;
 
 db.mongoose
-  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+  .connect(`mongodb://${process.env.SERVER_HOST_DB}:${process.env.SERVER_PORT_DB}/${process.env.SERVER_NAME_DB}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -67,10 +68,11 @@ app.use("/api/messages", messageRoute);
 
 
 // set port, listen for requests
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+//const PORT = process.env.PORT || 8000;
+app.listen(process.env.SERVER_PORT, () => {
+  console.log(`Server has start on port ${process.env.SERVER_PORT}` );
 });
+
 
 function initial() {
   Role.estimatedDocumentCount((err, count) => {
